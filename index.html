@@ -67,12 +67,14 @@ section{padding-bottom:90px}
 
 <label>Repeats</label>
 <select id="billRepeat">
-<option>Monthly</option>
-<option>Weekly</option>
-<option>Yearly</option>
-</select>
-
-<button class="primary" onclick="addBill()">Add Bill</button>
+<option value="Monthly">Monthly</option>
+<option value="Biweekly">Biweekly</option>
+<option value="Weekly">Weekly</option>
+<option value="Quarterly">Quarterly</option>
+<option value="Every 6 Months">Every 6 Months</option>
+<option value="Yearly">Yearly</option>
+<option value="One Time">One Time</option>
+</select><button class="primary" onclick="addBill()">Add Bill</button>
 <div id="msg" class="msg"></div>
 </div>
 
