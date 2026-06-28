@@ -171,14 +171,23 @@ function addBill(){
   if(amount<=0){alert("Enter amount.");return;}
   if(!day || day<1 || day>31){alert("Enter due day 1-31.");return;}
 
-  data.bills.push({id:Date.now().toString(),name:name,amount:amount,day:day,paid:false});
+  
   document.getElementById("billName").value="";
   document.getElementById("billAmount").value="";
   document.getElementById("billDay").value="";
   document.getElementById("msg").innerText="Bill added.";
   save();
 }
+  let repeat = document.getElementById("billRepeat").value;
 
+data.bills.push({
+    id: Date.now().toString(),
+    name: name,
+    amount: amount,
+    day: day,
+    repeat: repeat,
+    paid: false
+});
 function togglePaid(id){
   let b = data.bills.find(x=>x.id===id);
   if(b){b.paid=!b.paid;save();}
