@@ -120,7 +120,6 @@ section{padding-bottom:90px}
 <button onclick="show('bank',this)">Bank</button>
 <button onclick="show('settings',this)">Settings</button>
 </nav>
-
 <script>
 let data = JSON.parse(localStorage.getItem("blazeBillsData") || '{"bills":[],"bank":{"balance":0,"income":0,"cushion":0}}');
 
@@ -187,7 +186,8 @@ function addBill(){
   document.getElementById("billRepeat").value="Monthly";
   document.getElementById("msg").innerText="Bill added.";
   save();
-});
+}
+
 function togglePaid(id){
   let b = data.bills.find(x=>x.id===id);
   if(b){b.paid=!b.paid;save();}
@@ -227,14 +227,13 @@ function render(){
   document.getElementById("bankCushion").value = data.bank.cushion || "";
 
   let sorted = [...data.bills].sort((a,b)=>a.day-b.day);
+
   let html = sorted.map(b=>`
     <div class="bill">
       <div>
         <div class="name">${b.name} ${b.paid ? "✅" : ""}</div>
-        <div class="info">
-${money(b.amount)} • ${b.repeat}<br>
-Due Day ${b.day}
-</div>      </div>
+        <div class="info">${money(b.amount)} • ${b.repeat || "Monthly"}<br>Due Day ${b.day}</div>
+      </div>
       <div>
         <button class="smallbtn" onclick="togglePaid('${b.id}')">${b.paid ? "Undo" : "Paid"}</button>
         <button class="smallbtn" onclick="deleteBill('${b.id}')">X</button>
@@ -243,11 +242,12 @@ Due Day ${b.day}
   `).join("");
 
   document.getElementById("billList").innerHTML = html || "<p>No bills yet.</p>";
+
   document.getElementById("upcoming").innerHTML = sorted.filter(b=>!b.paid).slice(0,5).map(b=>`
     <div class="bill">
       <div>
         <div class="name">${b.name}</div>
-        <div class="info">${money(b.amount)} due day ${b.day}</div>
+        <div class="info">${money(b.amount)} • ${b.repeat || "Monthly"}<br>Due Day ${b.day}</div>
       </div>
       <button class="smallbtn" onclick="togglePaid('${b.id}')">Paid</button>
     </div>
@@ -271,6 +271,3 @@ function resetAll(){
 
 render();
 </script>
-
-</body>
-</html>
