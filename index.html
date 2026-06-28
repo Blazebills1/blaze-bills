@@ -166,27 +166,27 @@ function addBill(){
   let name = document.getElementById("billName").value.trim();
   let amount = num(document.getElementById("billAmount").value);
   let day = parseInt(document.getElementById("billDay").value.replace(/\D/g,""));
+  let repeat = document.getElementById("billRepeat").value;
 
   if(!name){alert("Enter bill name.");return;}
   if(amount<=0){alert("Enter amount.");return;}
   if(!day || day<1 || day>31){alert("Enter due day 1-31.");return;}
 
-  
-  document.getElementById("billName").value="";
-  document.getElementById("billAmount").value="";
-  document.getElementById("billDay").value="";
-  document.getElementById("msg").innerText="Bill added.";
-  save();
-}
-  let repeat = document.getElementById("billRepeat").value;
-
-data.bills.push({
+  data.bills.push({
     id: Date.now().toString(),
     name: name,
     amount: amount,
     day: day,
     repeat: repeat,
     paid: false
+  });
+
+  document.getElementById("billName").value="";
+  document.getElementById("billAmount").value="";
+  document.getElementById("billDay").value="";
+  document.getElementById("billRepeat").value="Monthly";
+  document.getElementById("msg").innerText="Bill added.";
+  save();
 });
 function togglePaid(id){
   let b = data.bills.find(x=>x.id===id);
