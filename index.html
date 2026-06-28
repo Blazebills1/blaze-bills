@@ -231,8 +231,10 @@ function render(){
     <div class="bill">
       <div>
         <div class="name">${b.name} ${b.paid ? "✅" : ""}</div>
-        <div class="info">${money(b.amount)} due day ${b.day}</div>
-      </div>
+        <div class="info">
+${money(b.amount)} • ${b.repeat}<br>
+Due Day ${b.day}
+</div>      </div>
       <div>
         <button class="smallbtn" onclick="togglePaid('${b.id}')">${b.paid ? "Undo" : "Paid"}</button>
         <button class="smallbtn" onclick="deleteBill('${b.id}')">X</button>
