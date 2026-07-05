@@ -1,323 +1,388 @@
 <!DOCTYPE html>
 <html>
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Blaze Bills</title>
-
 <style>
-body{
-  margin:0;
-  font-family:-apple-system,BlinkMacSystemFont,sans-serif;
-  background:#050505;
-  color:white;
-  padding:20px;
-  padding-bottom:110px;
-}
-h1{font-size:42px;margin:35px 0 0;font-weight:900}
-h2{font-size:30px;margin:0 0 20px;font-weight:900}
-.sub{color:#aaa;font-size:20px;font-weight:800;margin-bottom:30px}
-.card{
-  background:#141414;
-  border:1px solid #333;
-  border-radius:28px;
-  padding:22px;
-  margin-bottom:22px;
-}
-.grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
-.box{
-  background:#070707;
-  border:1px solid #333;
-  border-radius:22px;
-  padding:18px;
-}
-.box label{color:#aaa;font-size:15px;font-weight:900}
-.box div{font-size:28px;color:#f5d76e;font-weight:900;margin-top:8px}
-.green{color:#20d66b!important}
-input,select{
-  width:100%;
-  box-sizing:border-box;
-  background:#050505;
-  color:white;
-  border:1px solid #444;
-  border-radius:18px;
-  padding:16px;
-  font-size:22px;
-  font-weight:800;
-  margin-bottom:18px;
-}
-label{font-size:20px;font-weight:900}
-button{
-  border:0;
-  border-radius:20px;
-  padding:18px;
-  font-size:22px;
-  font-weight:900;
-}
-.gold{background:#e0bd35;color:black;width:100%}
-.bill{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  gap:12px;
-  margin:14px 0;
-}
-.bill small{color:#aaa;font-size:16px;font-weight:800}
-.actions{display:flex;gap:10px}
-.darkbtn{background:#333;color:white}
-.xbtn{background:#333;color:white}
-.nav{
-  position:fixed;
-  bottom:14px;
-  left:14px;
-  right:14px;
-  background:#141414;
-  border:1px solid #333;
-  border-radius:26px;
-  display:grid;
-  grid-template-columns:repeat(4,1fr);
-  padding:10px;
-  gap:8px;
-}
-.nav button{
-  background:transparent;
-  color:#aaa;
-  font-size:20px;
-}
-.nav button.active{
-  background:#e0bd35;
-  color:black;
-}
-.page{display:none}
-.page.active{display:block}
+body{margin:0;font-family:-apple-system,BlinkMacSystemFont,sans-serif;background:#050505;color:white;padding:20px}
+h1{font-size:36px;margin:0}.sub{color:#aaa;font-weight:600;margin-bottom:25px}
+.card{background:#141414;border:1px solid #333;border-radius:24px;padding:20px;margin-bottom:18px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.box{background:#090909;border:1px solid #333;border-radius:18px;padding:15px}
+.box label{color:#aaa;font-size:13px;font-weight:700}.box div{font-size:23px;color:#f5d76e;font-weight:900;margin-top:6px}
+input,select{width:100%;box-sizing:border-box;background:#050505;color:white;border:1px solid #444;border-radius:16px;padding:16px;font-size:18px;margin:8px 0 14px}
+button{border:0;border-radius:16px;padding:14px;font-size:16px;font-weight:900}
+.primary{width:100%;background:#d4af37;color:#111}.smallbtn{background:#333;color:white;margin:4px}
+.editbtn{background:#f5d76e;color:#111;margin:4px}.danger{background:#7f1d1d;color:white}
+nav{position:fixed;bottom:15px;left:15px;right:15px;background:#111;border:1px solid #333;border-radius:22px;padding:8px;display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+nav button{background:transparent;color:#aaa}nav button.active{background:#d4af37;color:#111}
+section{padding-bottom:95px}.hide{display:none}
+.bill{border-bottom:1px solid #333;padding:14px 0}.bill:last-child{border-bottom:0}
+.row{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}
+.name{font-size:18px;font-weight:900}.amount{font-size:18px;color:#f5d76e;font-weight:900}
+.info{color:#aaa;font-size:14px;margin-top:5px;line-height:1.4}
+.good{color:#22c55e!important}.bad{color:#ef4444!important}.warn{color:#f59e0b!important}
+.msg{margin-top:12px;color:#22c55e;font-weight:800}
+.pill{display:inline-block;padding:4px 8px;border-radius:999px;font-size:12px;font-weight:900;margin-left:4px}
+.overdue{background:#7f1d1d;color:#fecaca}.soon{background:#78350f;color:#fde68a}.ok{background:#064e3b;color:#bbf7d0}.gray{background:#333;color:#ddd}
 </style>
 </head>
-
 <body>
 
-<div id="home" class="page active">
-  <h1>Blaze Bills</h1>
-  <div class="sub">Simple bill tracker + bank balance</div>
+<header>
+<h1>Blaze Bills</h1>
+<div class="sub">Bill tracker + simple bank balance</div>
+</header>
 
-  <div class="card">
-    <div class="grid">
-      <div class="box">
-        <label>Current Balance</label>
-        <div id="currentBalance">$0.00</div>
-      </div>
-      <div class="box">
-        <label>Left After Bills</label>
-        <div id="leftAfterBills" class="green">$0.00</div>
-      </div>
-      <div class="box">
-        <label>Unpaid Bills</label>
-        <div id="unpaidBills">$0.00</div>
-      </div>
-      <div class="box">
-        <label>Due This Week</label>
-        <div id="dueThisWeek">$0.00</div>
-      </div>
-    </div>
-  </div>
+<section id="home">
+<div class="card"><div class="grid">
+<div class="box"><label>Current Balance</label><div id="balance">$0.00</div></div>
+<div class="box"><label>Left After Bills</label><div id="left">$0.00</div></div>
+<div class="box"><label>Unpaid Bills</label><div id="unpaid">$0.00</div></div>
+<div class="box"><label>Due Soon</label><div id="week">$0.00</div></div>
+</div></div>
 
-  <div class="card">
-    <h2>Upcoming Bills</h2>
-    <div id="upcomingBills">No unpaid bills showing.</div>
-  </div>
+<div class="card"><h2>Needs Attention</h2><div id="attention"></div></div>
+<div class="card"><h2>Upcoming Bills</h2><div id="upcoming"></div></div>
+</section>
+
+<section id="bills" class="hide">
+<div class="card">
+<h2 id="billFormTitle">Add Bill</h2>
+
+<label>Bill Name</label>
+<input id="billName" type="text" placeholder="Rent">
+
+<label>Amount</label>
+<input id="billAmount" type="text" inputmode="decimal" placeholder="2000">
+
+<label>Next Due Date</label>
+<input id="billDue" type="date">
+
+<label>Repeats</label>
+<select id="billRepeat">
+<option value="Monthly">Monthly</option>
+<option value="Biweekly">Biweekly</option>
+<option value="Weekly">Weekly</option>
+<option value="Quarterly">Quarterly</option>
+<option value="Every 6 Months">Every 6 Months</option>
+<option value="Yearly">Yearly</option>
+<option value="One Time">One Time</option>
+</select>
+
+<button id="billSubmitBtn" class="primary" onclick="saveBillForm()">Add Bill</button>
+<button id="cancelEditBtn" class="smallbtn hide" onclick="cancelEdit()">Cancel Edit</button>
+<div id="msg" class="msg"></div>
 </div>
 
-<div id="bills" class="page">
-  <div class="card">
-    <h2>Add Bill</h2>
+<div class="card"><h2>All Bills</h2><div id="billList"></div></div>
+</section>
 
-    <label>Bill Name</label>
-    <input id="billName" placeholder="Rent">
+<section id="bank" class="hide">
+<div class="card">
+<h2>Simple Bank</h2>
 
-    <label>Amount</label>
-    <input id="billAmount" type="number" placeholder="2000">
+<label>Current Bank Balance</label>
+<input id="bankBalance" type="text" inputmode="decimal" placeholder="0">
 
-    <label>Due Day</label>
-    <input id="billDueDay" type="number" placeholder="1">
+<label>Expected Income</label>
+<input id="bankIncome" type="text" inputmode="decimal" placeholder="0">
 
-    <label>Repeats</label>
-    <select id="billRepeat">
-      <option>Monthly</option>
-      <option>Biweekly</option>
-      <option>Weekly</option>
-      <option>One Time</option>
-    </select>
+<label>Safety Cushion</label>
+<input id="bankCushion" type="text" inputmode="decimal" placeholder="500">
 
-    <button class="gold" onclick="addBill()">Add Bill</button>
-  </div>
-
-  <div class="card">
-    <h2>All Bills</h2>
-    <div id="allBills">No bills added yet.</div>
-  </div>
+<button class="primary" onclick="saveBank()">Save Bank Info</button>
 </div>
 
-<div id="bank" class="page">
-  <div class="card">
-    <h2>Bank Balance</h2>
-    <label>Current Bank Balance</label>
-    <input id="bankBalanceInput" type="number" placeholder="7000">
-    <button class="gold" onclick="saveBankBalance()">Save Balance</button>
-  </div>
+<div class="card">
+<h2>Deposit / Withdraw</h2>
+<label>Amount</label>
+<input id="transactionAmount" type="text" inputmode="decimal" placeholder="100">
+
+<label>Note</label>
+<input id="transactionNote" type="text" placeholder="Paycheck, groceries, gas">
+
+<button class="primary" onclick="addDeposit()">Add Deposit</button><br><br>
+<button class="primary danger" onclick="addWithdraw()">Add Withdrawal</button>
 </div>
 
-<div id="settings" class="page">
-  <div class="card">
-    <h2>Settings</h2>
-    <button class="gold" onclick="resetApp()">Reset All Data</button>
-  </div>
+<div class="card">
+<h2>Recent Bank Activity</h2>
+<div id="transactionList"></div>
 </div>
 
-<div class="nav">
-  <button id="navHome" class="active" onclick="showPage('home')">Home</button>
-  <button id="navBills" onclick="showPage('bills')">Bills</button>
-  <button id="navBank" onclick="showPage('bank')">Bank</button>
-  <button id="navSettings" onclick="showPage('settings')">Settings</button>
+<div class="card">
+<h2>Can I Buy It?</h2>
+<input id="buyAmount" type="text" inputmode="decimal" placeholder="Amount">
+<button class="primary" onclick="canIBuy()">Check</button>
+<p id="buyResult"></p>
 </div>
+</section>
+
+<section id="settings" class="hide">
+<div class="card">
+<h2>Settings</h2>
+<button class="primary" onclick="exportData()">Export Backup</button>
+<br><br>
+<label>Import Backup</label>
+<input type="file" accept="application/json" onchange="importData(event)">
+<button class="primary danger" onclick="resetAll()">Reset Everything</button>
+</div>
+</section>
+
+<nav>
+<button class="active" onclick="show('home',this)">Home</button>
+<button onclick="show('bills',this)">Bills</button>
+<button onclick="show('bank',this)">Bank</button>
+<button onclick="show('settings',this)">Settings</button>
+</nav>
 
 <script>
-let bills = JSON.parse(localStorage.getItem("blazeBills")) || [];
-let bankBalance = Number(localStorage.getItem("blazeBankBalance")) || 0;
+let data = JSON.parse(localStorage.getItem("blazeBillsData") || '{"bills":[],"bank":{"balance":0,"income":0,"cushion":0},"transactions":[]}');
+let editingBillId = null;
 
-function money(num){
-  return "$" + Number(num || 0).toLocaleString(undefined,{
-    minimumFractionDigits:2,
-    maximumFractionDigits:2
-  });
+if(!data.transactions) data.transactions = [];
+if(!data.bank) data.bank = {balance:0,income:0,cushion:0};
+
+data.bills = data.bills.map(b=>{
+  if(!b.dueDate && b.day){
+    let now=new Date();
+    let last=new Date(now.getFullYear(),now.getMonth()+1,0).getDate();
+    let d=Math.min(Number(b.day)||1,last);
+    b.dueDate=`${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,"0")}-${String(d).padStart(2,"0")}`;
+  }
+  if(!b.repeat) b.repeat="Monthly";
+  if(b.active===undefined) b.active=true;
+  return b;
+});
+
+function money(n){return (Number(n)||0).toLocaleString("en-US",{style:"currency",currency:"USD"});}
+function num(v){return parseFloat(String(v||"").replace(/[$, ]/g,"")) || 0;}
+function save(){localStorage.setItem("blazeBillsData",JSON.stringify(data));render();}
+function parseDate(s){let p=String(s).split("-");return new Date(Number(p[0]),Number(p[1])-1,Number(p[2]));}
+function formatDate(d){return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`;}
+function niceDate(s){if(!s)return "";return parseDate(s).toLocaleDateString("en-US",{month:"short",day:"numeric",year:"numeric"});}
+function daysUntil(s){let today=new Date(new Date().toDateString());return Math.ceil((parseDate(s)-today)/86400000);}
+
+function addMonths(date,months){
+  let d=new Date(date);
+  let day=d.getDate();
+  d.setMonth(d.getMonth()+months);
+  if(d.getDate()!==day)d.setDate(0);
+  return d;
 }
 
-function saveData(){
-  localStorage.setItem("blazeBills", JSON.stringify(bills));
-  localStorage.setItem("blazeBankBalance", bankBalance);
+function nextDue(current,repeat){
+  let d=parseDate(current);
+  if(repeat==="Weekly")d.setDate(d.getDate()+7);
+  else if(repeat==="Biweekly")d.setDate(d.getDate()+14);
+  else if(repeat==="Monthly")d=addMonths(d,1);
+  else if(repeat==="Quarterly")d=addMonths(d,3);
+  else if(repeat==="Every 6 Months")d=addMonths(d,6);
+  else if(repeat==="Yearly")d.setFullYear(d.getFullYear()+1);
+  else return "";
+  return formatDate(d);
 }
 
-function showPage(page){
-  document.querySelectorAll(".page").forEach(p => p.classList.remove("active"));
-  document.getElementById(page).classList.add("active");
-
-  document.querySelectorAll(".nav button").forEach(b => b.classList.remove("active"));
-  document.getElementById("nav" + page.charAt(0).toUpperCase() + page.slice(1)).classList.add("active");
-
-  render();
+function status(b){
+  let days=daysUntil(b.dueDate);
+  if(days<0)return `<span class="pill overdue">Overdue</span>`;
+  if(days===0)return `<span class="pill soon">Due Today</span>`;
+  if(days===1)return `<span class="pill soon">Tomorrow</span>`;
+  if(days<=7)return `<span class="pill soon">Due Soon</span>`;
+  return `<span class="pill gray">Upcoming</span>`;
 }
 
-function addBill(){
-  const name = document.getElementById("billName").value.trim();
-  const amount = Number(document.getElementById("billAmount").value);
-  const dueDay = Number(document.getElementById("billDueDay").value);
-  const repeat = document.getElementById("billRepeat").value;
+function dueText(b){
+  let d=daysUntil(b.dueDate);
+  if(d<0)return `Overdue by ${Math.abs(d)} day(s)`;
+  if(d===0)return "Due today";
+  if(d===1)return "Due tomorrow";
+  return `Due in ${d} days`;
+}
 
-  if(!name || !amount || !dueDay){
-    alert("Please enter bill name, amount, and due day.");
-    return;
+function activeBills(){return data.bills.filter(b=>b.active!==false);}
+function unpaidTotal(){return activeBills().reduce((s,b)=>s+Number(b.amount||0),0);}
+function dueWeek(){return activeBills().filter(b=>daysUntil(b.dueDate)>=0 && daysUntil(b.dueDate)<=7).reduce((s,b)=>s+Number(b.amount||0),0);}
+function leftAfterBills(){return num(data.bank.balance)+num(data.bank.income)-unpaidTotal()-num(data.bank.cushion);}
+
+function saveBillForm(){
+  let name=document.getElementById("billName").value.trim();
+  let amount=num(document.getElementById("billAmount").value);
+  let dueDate=document.getElementById("billDue").value;
+  let repeat=document.getElementById("billRepeat").value;
+
+  if(!name){alert("Enter bill name.");return;}
+  if(amount<=0){alert("Enter amount.");return;}
+  if(!dueDate){alert("Enter next due date.");return;}
+
+  if(editingBillId){
+    let b=data.bills.find(x=>x.id===editingBillId);
+    if(b){b.name=name;b.amount=amount;b.dueDate=dueDate;b.repeat=repeat;}
+    document.getElementById("msg").innerText="Bill updated.";
+  }else{
+    data.bills.push({id:Date.now().toString(),name,amount,dueDate,repeat,lastPaid:"",active:true});
+    document.getElementById("msg").innerText="Bill added.";
   }
 
-  bills.push({
-    id: Date.now(),
-    name,
-    amount,
-    dueDay,
-    repeat,
-    paid:false
-  });
-
-  document.getElementById("billName").value = "";
-  document.getElementById("billAmount").value = "";
-  document.getElementById("billDueDay").value = "";
-  document.getElementById("billRepeat").value = "Monthly";
-
-  saveData();
-  render();
+  clearBillForm();
+  save();
 }
 
-function togglePaid(id){
-  bills = bills.map(b => b.id === id ? {...b, paid: !b.paid} : b);
-  saveData();
-  render();
+function clearBillForm(){
+  editingBillId=null;
+  document.getElementById("billName").value="";
+  document.getElementById("billAmount").value="";
+  document.getElementById("billDue").value="";
+  document.getElementById("billRepeat").value="Monthly";
+  document.getElementById("billFormTitle").innerText="Add Bill";
+  document.getElementById("billSubmitBtn").innerText="Add Bill";
+  document.getElementById("cancelEditBtn").classList.add("hide");
+}
+
+function editBill(id){
+  let b=data.bills.find(x=>x.id===id);
+  if(!b)return;
+  editingBillId=id;
+  document.getElementById("billName").value=b.name;
+  document.getElementById("billAmount").value=b.amount;
+  document.getElementById("billDue").value=b.dueDate;
+  document.getElementById("billRepeat").value=b.repeat;
+  document.getElementById("billFormTitle").innerText="Edit Bill";
+  document.getElementById("billSubmitBtn").innerText="Save Changes";
+  document.getElementById("cancelEditBtn").classList.remove("hide");
+  show("bills",document.querySelectorAll("nav button")[1]);
+  window.scrollTo(0,0);
+}
+
+function cancelEdit(){clearBillForm();}
+
+function markPaid(id){
+  let b=data.bills.find(x=>x.id===id);
+  if(!b)return;
+  b.lastPaid=formatDate(new Date());
+  if(b.repeat==="One Time"){b.active=false;}
+  else{b.dueDate=nextDue(b.dueDate,b.repeat);}
+  save();
 }
 
 function deleteBill(id){
-  bills = bills.filter(b => b.id !== id);
-  saveData();
-  render();
+  if(confirm("Delete this bill?")){
+    data.bills=data.bills.filter(b=>b.id!==id);
+    save();
+  }
 }
 
-function saveBankBalance(){
-  bankBalance = Number(document.getElementById("bankBalanceInput").value) || 0;
-  saveData();
-  render();
-  alert("Bank balance saved.");
+function saveBank(){
+  data.bank.balance=num(document.getElementById("bankBalance").value);
+  data.bank.income=num(document.getElementById("bankIncome").value);
+  data.bank.cushion=num(document.getElementById("bankCushion").value);
+  save();
+}
+
+function addDeposit(){
+  let amount=num(document.getElementById("transactionAmount").value);
+  let note=document.getElementById("transactionNote").value||"Deposit";
+  if(amount<=0){alert("Enter deposit amount.");return;}
+  data.bank.balance=num(data.bank.balance)+amount;
+  data.transactions.unshift({date:formatDate(new Date()),type:"Deposit",amount,note});
+  document.getElementById("transactionAmount").value="";
+  document.getElementById("transactionNote").value="";
+  save();
+}
+
+function addWithdraw(){
+  let amount=num(document.getElementById("transactionAmount").value);
+  let note=document.getElementById("transactionNote").value||"Withdrawal";
+  if(amount<=0){alert("Enter withdrawal amount.");return;}
+  data.bank.balance=num(data.bank.balance)-amount;
+  data.transactions.unshift({date:formatDate(new Date()),type:"Withdrawal",amount,note});
+  document.getElementById("transactionAmount").value="";
+  document.getElementById("transactionNote").value="";
+  save();
+}
+
+function canIBuy(){
+  let amount=num(document.getElementById("buyAmount").value);
+  let after=leftAfterBills()-amount;
+  document.getElementById("buyResult").innerText =
+    after>=0 ? `Yes. You should still have ${money(after)} left after bills.` :
+    `Be careful. You would be short by ${money(Math.abs(after))}.`;
+  document.getElementById("buyResult").className=after>=0?"good":"bad";
+}
+
+function billHTML(b){
+  return `<div class="bill">
+    <div class="row">
+      <div>
+        <div class="name">${b.name} ${status(b)}</div>
+        <div class="info">${money(b.amount)} • ${b.repeat}<br>Next Due: ${niceDate(b.dueDate)} — ${dueText(b)}<br>${b.lastPaid ? "Last Paid: "+niceDate(b.lastPaid) : "Not paid yet"}</div>
+      </div>
+      <div class="amount">${money(b.amount)}</div>
+    </div>
+    <button class="smallbtn" onclick="markPaid('${b.id}')">Paid</button>
+    <button class="editbtn" onclick="editBill('${b.id}')">Edit</button>
+    <button class="smallbtn" onclick="deleteBill('${b.id}')">Delete</button>
+  </div>`;
 }
 
 function render(){
-  document.getElementById("bankBalanceInput").value = bankBalance || "";
+  document.getElementById("balance").innerText=money(data.bank.balance);
+  document.getElementById("unpaid").innerText=money(unpaidTotal());
+  document.getElementById("week").innerText=money(dueWeek());
+  document.getElementById("left").innerText=money(leftAfterBills());
+  document.getElementById("left").className=leftAfterBills()>=0?"good":"bad";
 
-  const unpaid = bills.filter(b => !b.paid);
-  const unpaidTotal = unpaid.reduce((sum,b) => sum + Number(b.amount), 0);
+  document.getElementById("bankBalance").value=data.bank.balance||"";
+  document.getElementById("bankIncome").value=data.bank.income||"";
+  document.getElementById("bankCushion").value=data.bank.cushion||"";
 
-  const today = new Date();
-  const todayDay = today.getDate();
-  const weekEnd = todayDay + 7;
+  let sorted=activeBills().sort((a,b)=>parseDate(a.dueDate)-parseDate(b.dueDate));
+  document.getElementById("billList").innerHTML=sorted.map(billHTML).join("")||"<p>No bills yet.</p>";
 
-  const dueWeekTotal = unpaid
-    .filter(b => b.dueDay >= todayDay && b.dueDay <= weekEnd)
-    .reduce((sum,b) => sum + Number(b.amount), 0);
+  let attention=sorted.filter(b=>daysUntil(b.dueDate)<=7);
+  document.getElementById("attention").innerHTML=attention.map(billHTML).join("")||"<p>No bills need attention.</p>";
 
-  document.getElementById("currentBalance").innerText = money(bankBalance);
-  document.getElementById("unpaidBills").innerText = money(unpaidTotal);
-  document.getElementById("leftAfterBills").innerText = money(bankBalance - unpaidTotal);
-  document.getElementById("dueThisWeek").innerText = money(dueWeekTotal);
+  document.getElementById("upcoming").innerHTML=sorted.slice(0,5).map(billHTML).join("")||"<p>No upcoming bills.</p>";
 
-  const upcomingBox = document.getElementById("upcomingBills");
-  if(unpaid.length === 0){
-    upcomingBox.innerHTML = "No unpaid bills showing.";
-  } else {
-    upcomingBox.innerHTML = unpaid
-      .sort((a,b) => a.dueDay - b.dueDay)
-      .map(b => `
-        <div>
-          <b>${b.name}</b><br>
-          <small>${money(b.amount)} • ${b.repeat} • Due Day ${b.dueDay}</small>
-        </div><br>
-      `).join("");
-  }
-
-  const allBills = document.getElementById("allBills");
-  if(bills.length === 0){
-    allBills.innerHTML = "No bills added yet.";
-  } else {
-    allBills.innerHTML = bills
-      .sort((a,b) => a.dueDay - b.dueDay)
-      .map(b => `
-        <div class="bill">
-          <div>
-            <b>${b.name} ${b.paid ? "✅" : ""}</b><br>
-            <small>${money(b.amount)} • ${b.repeat}<br>Due Day ${b.dueDay}</small>
-          </div>
-          <div class="actions">
-            <button class="darkbtn" onclick="togglePaid(${b.id})">${b.paid ? "Undo" : "Paid"}</button>
-            <button class="xbtn" onclick="deleteBill(${b.id})">X</button>
-          </div>
-        </div>
-      `).join("");
-  }
+  document.getElementById("transactionList").innerHTML=data.transactions.slice(0,6).map(t=>
+    `<div class="bill"><div><div class="name">${t.type}</div><div class="info">${niceDate(t.date)}<br>${t.note}</div></div><div class="amount">${money(t.amount)}</div></div>`
+  ).join("")||"<p>No bank activity yet.</p>";
 }
 
-function resetApp(){
-  if(confirm("Delete all bills and balance?")){
-    bills = [];
-    bankBalance = 0;
-    saveData();
+function show(id,btn){
+  document.querySelectorAll("section").forEach(s=>s.classList.add("hide"));
+  document.getElementById(id).classList.remove("hide");
+  document.querySelectorAll("nav button").forEach(b=>b.classList.remove("active"));
+  btn.classList.add("active");
+}
+
+function exportData(){
+  let blob=new Blob([JSON.stringify(data,null,2)],{type:"application/json"});
+  let a=document.createElement("a");
+  a.href=URL.createObjectURL(blob);
+  a.download="blaze-bills-backup.json";
+  a.click();
+}
+
+function importData(e){
+  let file=e.target.files[0];
+  if(!file)return;
+  let reader=new FileReader();
+  reader.onload=()=>{data=JSON.parse(reader.result);save();};
+  reader.readAsText(file);
+}
+
+function resetAll(){
+  if(confirm("Delete all data?")){
+    localStorage.removeItem("blazeBillsData");
+    data={bills:[],bank:{balance:0,income:0,cushion:0},transactions:[]};
     render();
   }
 }
 
 render();
 </script>
-
 </body>
 </html>
