@@ -1,263 +1,54 @@
+
 <!DOCTYPE html>
-<html>
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Blaze Bills</title>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Blaze Bills v2.2</title>
 <style>
-body{margin:0;font-family:-apple-system,BlinkMacSystemFont,sans-serif;background:#050505;color:white;padding:20px}
-h1{font-size:36px;margin-bottom:0}
-.sub{color:#aaa;font-weight:600;margin-bottom:25px}
-.card{background:#141414;border:1px solid #333;border-radius:24px;padding:20px;margin-bottom:18px}
-.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-.box{background:#090909;border:1px solid #333;border-radius:18px;padding:15px}
-.box label{color:#aaa;font-size:13px;font-weight:700}
-.box div{font-size:24px;color:#f5d76e;font-weight:900;margin-top:6px}
-input,select{width:100%;box-sizing:border-box;background:#050505;color:white;border:1px solid #444;border-radius:16px;padding:16px;font-size:20px;margin:8px 0 14px}
-button{border:0;border-radius:16px;padding:15px;font-size:17px;font-weight:900}
-.primary{width:100%;background:#d4af37;color:#111}
-.smallbtn{background:#333;color:white;margin-left:5px}
-nav{position:fixed;bottom:15px;left:15px;right:15px;background:#111;border:1px solid #333;border-radius:22px;padding:8px;display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
-nav button{background:transparent;color:#aaa}
-nav button.active{background:#d4af37;color:#111}
-section{padding-bottom:90px}
-.hide{display:none}
-.bill{display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #333;padding:14px 0}
-.bill:last-child{border-bottom:0}
-.name{font-size:18px;font-weight:900}
-.info{color:#aaa;font-size:14px;margin-top:4px}
-.good{color:#22c55e!important}
-.bad{color:#ef4444!important}
-.msg{margin-top:12px;color:#22c55e;font-weight:800}
-</style>
-</head>
-<body>
-
-<header>
-<h1>Blaze Bills</h1>
-<div class="sub">Simple bill tracker + bank balance</div>
-</header>
-
-<section id="home">
-<div class="card">
-<div class="grid">
-<div class="box"><label>Current Balance</label><div id="balance">$0.00</div></div>
-<div class="box"><label>Left After Bills</label><div id="left">$0.00</div></div>
-<div class="box"><label>Unpaid Bills</label><div id="unpaid">$0.00</div></div>
-<div class="box"><label>Due This Week</label><div id="week">$0.00</div></div>
-</div>
-</div>
-<div class="card">
-<h2>Upcoming Bills</h2>
-<div id="upcoming"></div>
-</div>
-</section>
-
-<section id="bills" class="hide">
-<div class="card">
-<h2>Add Bill</h2>
-<label>Bill Name</label>
-<input id="billName" type="text" placeholder="Rent">
-
-<label>Amount</label>
-<input id="billAmount" type="text" inputmode="decimal" placeholder="2000">
-
-<label>Due Day</label>
-<input id="billDay" type="text" inputmode="numeric" placeholder="1">
-
-<label>Repeats</label>
-<select id="billRepeat">
-<option>Monthly</option>
-<option>Weekly</option>
-<option>Yearly</option>
-</select>
-
-<button class="primary" onclick="addBill()">Add Bill</button>
-<div id="msg" class="msg"></div>
-</div>
-
-<div class="card">
-<h2>All Bills</h2>
-<div id="billList"></div>
-</div>
-</section>
-
-<section id="bank" class="hide">
-<div class="card">
-<h2>Simple Bank</h2>
-<label>Current Bank Balance</label>
-<input id="bankBalance" type="text" inputmode="decimal" placeholder="0">
-
-<label>Expected Income</label>
-<input id="bankIncome" type="text" inputmode="decimal" placeholder="0">
-
-<label>Safety Cushion</label>
-<input id="bankCushion" type="text" inputmode="decimal" placeholder="500">
-
-<button class="primary" onclick="saveBank()">Save Bank Info</button>
-</div>
-
-<div class="card">
-<h2>Can I Buy It?</h2>
-<input id="buyAmount" type="text" inputmode="decimal" placeholder="Amount">
-<button class="primary" onclick="canIBuy()">Check</button>
-<p id="buyResult"></p>
-</div>
-</section>
-
-<section id="settings" class="hide">
-<div class="card">
-<h2>Settings</h2>
-<button class="primary" onclick="resetAll()">Reset Everything</button>
-</div>
-</section>
-
-<nav>
-<button class="active" onclick="show('home',this)">Home</button>
-<button onclick="show('bills',this)">Bills</button>
-<button onclick="show('bank',this)">Bank</button>
-<button onclick="show('settings',this)">Settings</button>
-</nav>
-
+*{box-sizing:border-box}body{margin:0;padding:18px;background:#050505;color:#fff;font-family:-apple-system,BlinkMacSystemFont,Arial,sans-serif}h1{margin:0;font-size:34px}.sub,.muted{color:#aaa}.sub{margin:4px 0 20px}.card{background:#141414;border:1px solid #333;border-radius:20px;padding:17px;margin-bottom:15px}.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.tile{background:#090909;border:1px solid #333;border-radius:15px;padding:12px}.tile small{color:#aaa}.tile strong{display:block;color:#f5d76e;font-size:21px;margin-top:6px;overflow-wrap:anywhere}input,select{width:100%;background:#050505;color:#fff;border:1px solid #555;border-radius:12px;padding:12px;font-size:17px;margin:6px 0 13px}input[type=checkbox]{width:auto;margin:0 6px 0 0;accent-color:#d4af37}button{border:0;border-radius:12px;padding:11px 13px;font-size:15px;font-weight:800;cursor:pointer}.primary{background:#d4af37;color:#111;width:100%}.small{background:#333;color:white;margin:4px 4px 4px 0}.danger{background:#7f1d1d;color:#fff}.entry{border-bottom:1px solid #333;padding:13px 0}.entry:last-child{border:0}.row{display:flex;justify-content:space-between;gap:10px;align-items:start}.name{font-weight:800;font-size:17px}.amount{color:#f5d76e;font-weight:800;white-space:nowrap}.info{color:#aaa;font-size:13px;line-height:1.5;margin-top:4px}.good{color:#22c55e!important}.bad{color:#f87171!important}.warn{color:#fbbf24!important}.hide{display:none!important}section{padding-bottom:92px}nav{position:fixed;bottom:10px;left:10px;right:10px;display:grid;grid-template-columns:repeat(4,1fr);gap:4px;padding:7px;background:#111;border:1px solid #333;border-radius:18px}nav button{background:transparent;color:#aaa;padding:12px 4px}nav button.active{background:#d4af37;color:#111}.note{font-size:13px;color:#aaa;line-height:1.5}.checkrow{display:flex;align-items:center;gap:6px;padding:7px 0}.checkrow input{width:20px;height:20px}.actions{margin-top:8px}.two{display:grid;grid-template-columns:1fr 1fr;gap:8px}label{font-weight:700;font-size:14px}#notice{color:#f5d76e;font-weight:700}
+</style></head><body>
+<header><h1>Blaze Bills</h1><p class="sub">Bills + bank register <span class="muted">v2.2</span></p></header>
+<section id="home"><div class="card"><div class="grid"><div class="tile"><small>Register Balance</small><strong id="balance"></strong></div><div class="tile"><small>Left After Bills*</small><strong id="left"></strong></div><div class="tile"><small>Next Unpaid Bills</small><strong id="unpaid"></strong></div><div class="tile"><small>Due Within 7 Days</small><strong id="week"></strong></div></div><p class="note">*Estimate includes expected income and safety cushion. Bills are not automatically deducted from your bank register.</p></div><div class="card"><h2>Overdue / Due Soon</h2><div id="attention"></div></div><div class="card"><h2>Upcoming Bills</h2><div id="upcoming"></div></div></section>
+<section id="bills" class="hide"><div class="card"><h2 id="billFormTitle">Add Bill</h2><label for="billName">Bill Name</label><input id="billName" placeholder="Rent"><label for="billAmount">Amount</label><input id="billAmount" inputmode="decimal" placeholder="2000"><label for="billDue">Next Due Date</label><input id="billDue" type="date"><label for="billRepeat">Repeats</label><select id="billRepeat"><option>Monthly</option><option>Biweekly</option><option>Weekly</option><option>Quarterly</option><option>Every 6 Months</option><option>Yearly</option><option>One Time</option></select><button id="billSave" class="primary" onclick="saveBillForm()">Add Bill</button><button id="cancelBill" class="small hide" onclick="cancelEdit()">Cancel Edit</button><p id="billMsg" class="good"></p></div><div class="card"><h2>Active Bills</h2><div id="billList"></div></div><div class="card"><h2>Completed One-Time Bills</h2><div id="archived"></div></div></section>
+<section id="bank" class="hide"><div class="card"><h2>Simple Bank</h2><label for="bankBalance">Current Register Balance</label><input id="bankBalance" inputmode="decimal"><label for="bankIncome">Expected Income (not yet deposited)</label><input id="bankIncome" inputmode="decimal"><label for="bankCushion">Safety Cushion</label><input id="bankCushion" inputmode="decimal"><button class="primary" onclick="saveBank()">Save Bank Info</button></div><div class="card"><h2>Deposit / Withdrawal</h2><label for="txAmount">Amount</label><input id="txAmount" inputmode="decimal" placeholder="100"><label for="txNote">Note</label><input id="txNote" placeholder="Paycheck, groceries, gas"><div class="two"><button class="primary" onclick="addTransaction('Deposit')">Deposit</button><button class="danger" onclick="addTransaction('Withdrawal')">Withdrawal</button></div><p class="note">Deposits and withdrawals update your register immediately. Marking them cleared does not change your register balance.</p></div><div class="card"><h2>Reconcile Bank</h2><label for="statementBalance">Actual Bank Balance (from bank app or statement)</label><input id="statementBalance" inputmode="decimal" placeholder="0.00" oninput="renderReconcile()"><p class="note">The app calculates your expected bank balance as register balance minus uncleared deposits plus uncleared withdrawals. Check transactions below as they appear at the bank.</p><div class="grid"><div class="tile"><small>Outstanding Deposits</small><strong id="outDeposits"></strong></div><div class="tile"><small>Outstanding Withdrawals</small><strong id="outWithdrawals"></strong></div><div class="tile"><small>Expected Bank Balance</small><strong id="expectedBank"></strong></div><div class="tile"><small>Difference</small><strong id="difference"></strong></div></div><p id="reconcileStatus" class="note"></p><button class="primary" onclick="completeReconcile()">Save Reconciliation</button><p id="lastReconcile" class="note"></p></div><div class="card"><h2>Bank Transactions</h2><p class="note">Check Cleared only when a transaction appears in your bank account. Older v2.1 transactions start unchecked.</p><div id="txList"></div></div><div class="card"><h2>Can I Buy It?</h2><input id="buyAmount" inputmode="decimal" placeholder="Purchase amount"><button class="primary" onclick="canIBuy()">Check</button><p id="buyResult"></p></div></section>
+<section id="settings" class="hide"><div class="card"><h2>Settings</h2><p>Blaze Bills v2.2</p><button class="primary" onclick="exportData()">Export Backup</button><p><label for="importFile">Import Backup</label><input id="importFile" type="file" accept="application/json,.json" onchange="importData(event)"></p><button class="primary danger" onclick="resetAll()">Reset Everything</button><p class="note">Your data stays in this browser on this device. GitHub does not store your personal bills or transactions. Keep backup copies in a safe place.</p></div></section>
+<nav><button class="active" onclick="show('home',this)">Home</button><button onclick="show('bills',this)">Bills</button><button onclick="show('bank',this)">Bank</button><button onclick="show('settings',this)">Settings</button></nav>
 <script>
-let data = JSON.parse(localStorage.getItem("blazeBillsData") || '{"bills":[],"bank":{"balance":0,"income":0,"cushion":0}}');
-
-function money(n){
-  return (Number(n)||0).toLocaleString("en-US",{style:"currency",currency:"USD"});
-}
-
-function num(v){
-  return parseFloat(String(v||"").replace(/[$, ]/g,"")) || 0;
-}
-
-function save(){
-  localStorage.setItem("blazeBillsData", JSON.stringify(data));
-  render();
-}
-
-function dueDate(day){
-  let now = new Date();
-  let last = new Date(now.getFullYear(), now.getMonth()+1, 0).getDate();
-  return new Date(now.getFullYear(), now.getMonth(), Math.min(day,last));
-}
-
-function daysUntil(day){
-  let today = new Date(new Date().toDateString());
-  let due = dueDate(day);
-  return Math.ceil((due - today) / 86400000);
-}
-
-function unpaidTotal(){
-  return data.bills.filter(b=>!b.paid).reduce((s,b)=>s+Number(b.amount),0);
-}
-
-function dueWeek(){
-  return data.bills.filter(b=>!b.paid && daysUntil(b.day)>=0 && daysUntil(b.day)<=7)
-  .reduce((s,b)=>s+Number(b.amount),0);
-}
-
-function leftAfterBills(){
-  return num(data.bank.balance)+num(data.bank.income)-unpaidTotal()-num(data.bank.cushion);
-}
-
-function addBill(){
-  let name = document.getElementById("billName").value.trim();
-  let amount = num(document.getElementById("billAmount").value);
-  let day = parseInt(document.getElementById("billDay").value.replace(/\D/g,""));
-
-  if(!name){alert("Enter bill name.");return;}
-  if(amount<=0){alert("Enter amount.");return;}
-  if(!day || day<1 || day>31){alert("Enter due day 1-31.");return;}
-
-  data.bills.push({id:Date.now().toString(),name:name,amount:amount,day:day,paid:false});
-  document.getElementById("billName").value="";
-  document.getElementById("billAmount").value="";
-  document.getElementById("billDay").value="";
-  document.getElementById("msg").innerText="Bill added.";
-  save();
-}
-
-function togglePaid(id){
-  let b = data.bills.find(x=>x.id===id);
-  if(b){b.paid=!b.paid;save();}
-}
-
-function deleteBill(id){
-  if(confirm("Delete this bill?")){
-    data.bills = data.bills.filter(b=>b.id!==id);
-    save();
-  }
-}
-
-function saveBank(){
-  data.bank.balance = num(document.getElementById("bankBalance").value);
-  data.bank.income = num(document.getElementById("bankIncome").value);
-  data.bank.cushion = num(document.getElementById("bankCushion").value);
-  save();
-}
-
-function canIBuy(){
-  let amount = num(document.getElementById("buyAmount").value);
-  let after = leftAfterBills() - amount;
-  document.getElementById("buyResult").innerText =
-    after >= 0 ? "Yes. You should still have " + money(after) + " left." :
-    "Be careful. You would be short by " + money(Math.abs(after)) + ".";
-}
-
-function render(){
-  document.getElementById("balance").innerText = money(data.bank.balance);
-  document.getElementById("unpaid").innerText = money(unpaidTotal());
-  document.getElementById("week").innerText = money(dueWeek());
-  document.getElementById("left").innerText = money(leftAfterBills());
-  document.getElementById("left").className = leftAfterBills()>=0 ? "good" : "bad";
-
-  document.getElementById("bankBalance").value = data.bank.balance || "";
-  document.getElementById("bankIncome").value = data.bank.income || "";
-  document.getElementById("bankCushion").value = data.bank.cushion || "";
-
-  let sorted = [...data.bills].sort((a,b)=>a.day-b.day);
-  let html = sorted.map(b=>`
-    <div class="bill">
-      <div>
-        <div class="name">${b.name} ${b.paid ? "✅" : ""}</div>
-        <div class="info">${money(b.amount)} due day ${b.day}</div>
-      </div>
-      <div>
-        <button class="smallbtn" onclick="togglePaid('${b.id}')">${b.paid ? "Undo" : "Paid"}</button>
-        <button class="smallbtn" onclick="deleteBill('${b.id}')">X</button>
-      </div>
-    </div>
-  `).join("");
-
-  document.getElementById("billList").innerHTML = html || "<p>No bills yet.</p>";
-  document.getElementById("upcoming").innerHTML = sorted.filter(b=>!b.paid).slice(0,5).map(b=>`
-    <div class="bill">
-      <div>
-        <div class="name">${b.name}</div>
-        <div class="info">${money(b.amount)} due day ${b.day}</div>
-      </div>
-      <button class="smallbtn" onclick="togglePaid('${b.id}')">Paid</button>
-    </div>
-  `).join("") || "<p>No unpaid bills showing.</p>";
-}
-
-function show(id,btn){
-  document.querySelectorAll("section").forEach(s=>s.classList.add("hide"));
-  document.getElementById(id).classList.remove("hide");
-  document.querySelectorAll("nav button").forEach(b=>b.classList.remove("active"));
-  btn.classList.add("active");
-}
-
-function resetAll(){
-  if(confirm("Delete all data?")){
-    localStorage.removeItem("blazeBillsData");
-    data = {bills:[],bank:{balance:0,income:0,cushion:0}};
-    render();
-  }
-}
-
+'use strict';
+const KEY='blazeBillsData';let data;let editingBillId=null;
+const $=id=>document.getElementById(id);
+const money=n=>(Number(n)||0).toLocaleString('en-US',{style:'currency',currency:'USD'});
+const num=v=>{const n=Number(String(v??'').replace(/[$,\s]/g,''));return Number.isFinite(n)?n:0};
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const today=()=>fmt(new Date());
+function fmt(d){return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`}
+function parse(s){if(!/^\d{4}-\d\d-\d\d$/.test(String(s)))return null;let [y,m,d]=s.split('-').map(Number);let x=new Date(y,m-1,d);return x.getFullYear()===y&&x.getMonth()===m-1&&x.getDate()===d?x:null}
+function nice(s){const d=parse(s);return d?d.toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}):'Date needed'}
+function days(s){const d=parse(s);if(!d)return 999999;const a=Date.UTC(d.getFullYear(),d.getMonth(),d.getDate()),n=new Date();return Math.round((a-Date.UTC(n.getFullYear(),n.getMonth(),n.getDate()))/86400000)}
+function monthStep(s,count,anchor){let d=parse(s);if(!d)return s;let target=new Date(d.getFullYear(),d.getMonth()+count,1);let max=new Date(target.getFullYear(),target.getMonth()+1,0).getDate();target.setDate(Math.min(anchor||d.getDate(),max));return fmt(target)}
+function nextDue(b){const d=parse(b.dueDate);if(!d)return b.dueDate;let n=new Date(d);switch(b.repeat){case 'Weekly':n.setDate(n.getDate()+7);break;case 'Biweekly':n.setDate(n.getDate()+14);break;case 'Monthly':return monthStep(b.dueDate,1,b.anchorDay);case 'Quarterly':return monthStep(b.dueDate,3,b.anchorDay);case 'Every 6 Months':return monthStep(b.dueDate,6,b.anchorDay);case 'Yearly':return monthStep(b.dueDate,12,b.anchorDay);default:return ''}return fmt(n)}
+function normalize(obj){if(!obj||typeof obj!=='object'||!Array.isArray(obj.bills)||!obj.bank||typeof obj.bank!=='object')throw Error('Not a Blaze Bills backup');let now=new Date();obj.bills=obj.bills.map((b,i)=>{let x={...b};x.id=String(x.id??`old-${i}`);x.name=String(x.name??'Unnamed bill');x.amount=num(x.amount);x.repeat=String(x.repeat||'Monthly');x.active=x.active!==false;if(!parse(x.dueDate)){let day=Math.min(31,Math.max(1,Number(x.day)||1));let last=new Date(now.getFullYear(),now.getMonth()+1,0).getDate();x.dueDate=fmt(new Date(now.getFullYear(),now.getMonth(),Math.min(day,last)));if(x.paid===true){x.dueDate=nextDue({...x,anchorDay:day});x.lastPaid=x.lastPaid||''}}x.anchorDay=Number(x.anchorDay)||Number(x.day)||parse(x.dueDate).getDate();return x});obj.bank={balance:num(obj.bank.balance),income:num(obj.bank.income),cushion:num(obj.bank.cushion)};obj.transactions=Array.isArray(obj.transactions)?obj.transactions.map((t,i)=>({...t,id:String(t.id??`legacy-${i}`),type:t.type==='Deposit'?'Deposit':'Withdrawal',amount:num(t.amount),note:String(t.note||''),date:parse(t.date)?t.date:today(),cleared:t.cleared===true})):[];obj.reconciliation=obj.reconciliation&&typeof obj.reconciliation==='object'?obj.reconciliation:{};return obj}
+try{data=normalize(JSON.parse(localStorage.getItem(KEY)||'{"bills":[],"bank":{"balance":0,"income":0,"cushion":0},"transactions":[]}'))}catch(e){alert('Saved data could not be read. It has NOT been deleted. Restore your backup if needed.');data={bills:[],bank:{balance:0,income:0,cushion:0},transactions:[],reconciliation:{}}}
+function persist(){try{localStorage.setItem(KEY,JSON.stringify(data))}catch(e){alert('Could not save locally. Export a backup.')}render()}
+function active(){return data.bills.filter(b=>b.active!==false)}
+function unpaid(){return active().reduce((s,b)=>s+num(b.amount),0)}
+function left(){return data.bank.balance+data.bank.income-unpaid()-data.bank.cushion}
+function saveBillForm(){let name=$('billName').value.trim(),amount=num($('billAmount').value),dueDate=$('billDue').value,repeat=$('billRepeat').value;if(!name||amount<=0||!parse(dueDate)){alert('Enter bill name, positive amount, and valid due date.');return}let b=editingBillId?data.bills.find(x=>x.id===editingBillId):null;if(b){Object.assign(b,{name,amount,dueDate,repeat,anchorDay:parse(dueDate).getDate()})}else data.bills.push({id:cryptoId(),name,amount,dueDate,repeat,anchorDay:parse(dueDate).getDate(),active:true,lastPaid:''});cancelEdit();$('billMsg').textContent='Bill saved.';persist()}
+function cryptoId(){return `${Date.now()}-${Math.random().toString(36).slice(2)}`}
+function cancelEdit(){editingBillId=null;for(const id of ['billName','billAmount','billDue'])$(id).value='';$('billRepeat').value='Monthly';$('billFormTitle').textContent='Add Bill';$('billSave').textContent='Add Bill';$('cancelBill').classList.add('hide')}
+function editBill(id){let b=data.bills.find(x=>x.id===id);if(!b)return;editingBillId=id;$('billName').value=b.name;$('billAmount').value=b.amount;$('billDue').value=b.dueDate;$('billRepeat').value=b.repeat;$('billFormTitle').textContent='Edit Bill';$('billSave').textContent='Save Changes';$('cancelBill').classList.remove('hide');show('bills',document.querySelectorAll('nav button')[1]);window.scrollTo(0,0)}
+function payBill(id){let b=data.bills.find(x=>x.id===id);if(!b)return;if(!confirm(`Mark ${b.name} paid? This will not change the bank balance.`))return;b.lastPaid=today();if(b.repeat==='One Time')b.active=false;else b.dueDate=nextDue(b);persist()}
+function deleteBill(id){if(!confirm('Delete this bill?'))return;data.bills=data.bills.filter(b=>b.id!==id);persist()}
+function saveBank(){data.bank.balance=num($('bankBalance').value);data.bank.income=num($('bankIncome').value);data.bank.cushion=num($('bankCushion').value);persist()}
+function addTransaction(type){let amount=num($('txAmount').value);if(amount<=0){alert('Enter a positive amount.');return}let note=$('txNote').value.trim()||type;data.transactions.unshift({id:cryptoId(),date:today(),type,amount,note,cleared:false});data.bank.balance+=type==='Deposit'?amount:-amount;$('txAmount').value='';$('txNote').value='';persist()}
+function setCleared(id,checked){let t=data.transactions.find(x=>x.id===id);if(!t)return;t.cleared=checked;persist()}
+function deleteTx(id){let t=data.transactions.find(x=>x.id===id);if(!t||!confirm(`Delete ${t.type.toLowerCase()} ${money(t.amount)} and reverse its effect on register balance?`))return;data.bank.balance+=t.type==='Deposit'?-t.amount:t.amount;data.transactions=data.transactions.filter(x=>x.id!==id);persist()}
+function totals(){return data.transactions.reduce((a,t)=>{if(!t.cleared){if(t.type==='Deposit')a.deposits+=t.amount;else a.withdrawals+=t.amount}return a},{deposits:0,withdrawals:0})}
+function renderReconcile(){let a=totals(),expected=data.bank.balance-a.deposits+a.withdrawals;let entered=$('statementBalance').value.trim();let actual=num(entered),difference=actual-expected;$('outDeposits').textContent=money(a.deposits);$('outWithdrawals').textContent=money(a.withdrawals);$('expectedBank').textContent=money(expected);$('difference').textContent=entered?money(difference):'—';$('difference').className=entered?(Math.abs(difference)<0.005?'good':'bad'):'';$('reconcileStatus').textContent=!entered?'Enter the bank balance to check the difference.':Math.abs(difference)<0.005?'Balances match. You can save this reconciliation.':'Difference must be $0.00 before saving. Review cleared transactions and your register starting balance.';let r=data.reconciliation;$('lastReconcile').textContent=r&&r.date?`Last saved reconciliation: ${nice(r.date)} | Bank balance ${money(r.bankBalance)}`:'No reconciliation saved yet.'}
+function completeReconcile(){let s=$('statementBalance').value.trim();if(!s||!Number.isFinite(Number(s.replace(/[$,\s]/g,'')))){alert('Enter a valid bank balance.');return}let a=totals(),expected=data.bank.balance-a.deposits+a.withdrawals,actual=num(s);if(Math.abs(actual-expected)>=0.005){alert(`Not balanced. Difference: ${money(actual-expected)}.`);return}data.reconciliation={date:today(),bankBalance:actual,registerBalance:data.bank.balance,outstandingDeposits:a.deposits,outstandingWithdrawals:a.withdrawals};persist();alert('Reconciliation saved. Difference: $0.00.')}
+function canIBuy(){let n=num($('buyAmount').value),after=left()-n;$('buyResult').textContent=after>=0?`Estimated ${money(after)} left after bills and this purchase.`:`Estimated shortfall ${money(-after)}.`;$('buyResult').className=after>=0?'good':'bad'}
+function billView(b){let d=days(b.dueDate),status=d<0?`Overdue ${-d} day(s)`:d===0?'Due today':`Due in ${d} day(s)`;return `<div class="entry"><div class="row"><div><div class="name">${esc(b.name)}</div><div class="info">${esc(b.repeat)} · ${nice(b.dueDate)} · <span class="${d<0?'bad':d<=7?'warn':''}">${status}</span><br>${b.lastPaid?'Last paid: '+nice(b.lastPaid):'No payment date recorded'}</div></div><div class="amount">${money(b.amount)}</div></div><div class="actions"><button class="small" onclick="payBill('${b.id}')">Paid</button><button class="small" onclick="editBill('${b.id}')">Edit</button><button class="small danger" onclick="deleteBill('${b.id}')">Delete</button></div></div>`}
+function render(){let bills=active().sort((a,b)=>a.dueDate.localeCompare(b.dueDate));$('balance').textContent=money(data.bank.balance);$('unpaid').textContent=money(unpaid());$('week').textContent=money(bills.filter(b=>days(b.dueDate)>=0&&days(b.dueDate)<=7).reduce((s,b)=>s+b.amount,0));$('left').textContent=money(left());$('left').className=left()>=0?'good':'bad';$('attention').innerHTML=bills.filter(b=>days(b.dueDate)<=7).map(billView).join('')||'<p class="muted">Nothing due soon.</p>';$('upcoming').innerHTML=bills.slice(0,5).map(billView).join('')||'<p class="muted">No upcoming bills.</p>';$('billList').innerHTML=bills.map(billView).join('')||'<p class="muted">No active bills.</p>';$('archived').innerHTML=data.bills.filter(b=>b.active===false).map(b=>`<div class="entry"><strong>${esc(b.name)}</strong> — ${money(b.amount)}<div class="info">Last paid: ${nice(b.lastPaid)}</div><button class="small danger" onclick="deleteBill('${b.id}')">Delete</button></div>`).join('')||'<p class="muted">No completed one-time bills.</p>';for(let [id,val] of [['bankBalance',data.bank.balance],['bankIncome',data.bank.income],['bankCushion',data.bank.cushion]]){if(document.activeElement!==$(id))$(id).value=val} $('txList').innerHTML=data.transactions.map(t=>`<div class="entry"><div class="row"><div><div class="name">${esc(t.note)}</div><div class="info">${nice(t.date)} · ${esc(t.type)}</div></div><div class="amount ${t.type==='Withdrawal'?'bad':'good'}">${t.type==='Withdrawal'?'-':'+'}${money(t.amount)}</div></div><label class="checkrow"><input type="checkbox" ${t.cleared?'checked':''} onchange="setCleared('${t.id}',this.checked)">Cleared at bank</label><button class="small danger" onclick="deleteTx('${t.id}')">Delete / Reverse</button></div>`).join('')||'<p class="muted">No transactions yet.</p>';renderReconcile()}
+function show(id,btn){document.querySelectorAll('section').forEach(s=>s.classList.add('hide'));$(id).classList.remove('hide');document.querySelectorAll('nav button').forEach(b=>b.classList.remove('active'));btn.classList.add('active')}
+function exportData(){let blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=`blaze-bills-backup-${today()}.json`;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),2000)}
+async function importData(e){let file=e.target.files[0];if(!file)return;try{let imported=normalize(JSON.parse(await file.text()));if(!confirm('Replace ALL current bills and bank data with this backup?'))return;data=imported;persist();alert('Backup imported.')}catch(err){alert('Import failed. Current data was not replaced.')}finally{e.target.value=''}}
+function resetAll(){if(!confirm('Permanently delete all Blaze Bills data from this browser?'))return;if(!confirm('Are you sure? Export a backup first.'))return;data=normalize({bills:[],bank:{balance:0,income:0,cushion:0},transactions:[]});persist()}
 render();
-</script>
-
-</body>
-</html>
+</script></body></html>
